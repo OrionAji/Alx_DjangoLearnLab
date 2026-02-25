@@ -23,7 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-sor&ezvf9ilpq-2wj9w2b1(d@isca&f7e+yq2z48%6$*m0f26e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+# Prevent XSS and content sniffing attacks
+SECURE_BROWSER_XSS_FILTER = True  
+X_FRAME_OPTIONS = 'DENY'          
+SECURE_CONTENT_TYPE_NOSNIFF = True  
+
 
 ALLOWED_HOSTS = []
 
@@ -39,8 +45,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookshelf.apps.BookshelfConfig',
     'relationship_app',
-
+    'accounts'
+    'csp',
 ]
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -50,7 +59,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
+
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'https://trusted.cdn.com')
+CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com')
+
+# Authentication Redirects
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
+
 
 ROOT_URLCONF = 'LibraryProject.urls'
 
@@ -123,3 +142,31 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+
+CSRF_COOKIE_SECURE = True     
+SESSION_COOKIE_SECURE = True   
+
+
+# Enforce HTTPS
+SECURE_SSL_REDIRECT = True  
+
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  
+SECURE_HSTS_PRELOAD = True  
+
+# Secure cookies
+SESSION_COOKIE_SECURE = True  
+CSRF_COOKIE_SECURE = True     
+
+# Additional security headers
+X_FRAME_OPTIONS = 'DENY'  
+SECURE_CONTENT_TYPE_NOSNIFF = True  
+SECURE_BROWSER_XSS_FILTER = True    
+
+# Trust X-Forwarded-Proto header from proxy (for HTTPS detection)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
