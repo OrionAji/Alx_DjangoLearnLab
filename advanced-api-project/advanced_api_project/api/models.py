@@ -13,7 +13,7 @@ class Author(models.Model):
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
-    published_year = models.IntegerField(max_length=4)
+    publication_year = models.IntegerField()
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
     
     def __str__(self):
