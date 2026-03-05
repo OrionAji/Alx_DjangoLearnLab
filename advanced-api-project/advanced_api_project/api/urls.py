@@ -34,3 +34,4 @@ router.register(r'books', BookViewSet, basename='book')  # auto-generates book-l
 urlpatterns = [
     path('', include(router.urls)),
 ]
+ 
